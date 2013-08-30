@@ -19,6 +19,27 @@ Then /^the grid should show (\d+) records$/ do |arg1|
   JS
 end
 
+
+When /^I select grouping on the "([^"]*)" column$/ do |col_name|
+  page.driver.browser.execute_script <<-JS
+    var grid = Ext.ComponentQuery.query('gridpanel')[0];
+    grid.store.group("#{col_name}")
+  JS
+  sleep 10
+end
+
+Then /^the grid should display (\d+) groups of rows$/ do |num_groups|
+  page.driver.browser.execute_script(<<-JS).should == num_groups.to_i
+    return Ext.select('.x-grid-group-title').elements.length;
+  JS
+end
+
+Then /^the grid should not display in groups$/ do
+  page.driver.browser.execute_script(<<-JS).should == 0
+    return Ext.select('.x-grid-group-title').elements.length;
+  JS
+end
+
 When /^I edit row (\d+) of the grid with #{capture_fields}$/ do |rowIndex, fields|
   fields = parse_fields(fields)
   js_set_fields = fields.each_pair.map do |k,v|

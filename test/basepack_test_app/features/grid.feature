@@ -342,3 +342,19 @@ Scenario: Inline grid data
     Given a book exists with title: "Man for himself"
     When I go to the GridWithInlineData test page
     Then I should see "Man for himself"
+
+@javascript
+Scenario: BookGroupedGrid should correctly display data in groups
+  Given an author exists with first_name: "Carlos", last_name: "Castaneda"
+  And a book exists with author: that author, title: "Journey to Ixtlan", rating: 5
+  And a book exists with author: that author, title: "The Art of Dreaming", rating: 5
+  And a book exists with author: that author, title: "Way of Warrior", rating: 3
+  When I go to the BookGroupedGrid test page
+  Then I should see "Carlos Castaneda"
+  And I should see "Journey to Ixtlan"
+  And I should see "The Art of Dreaming"
+  And I should see "Way of Warrior"
+  And the grid should not display in groups
+  When I select grouping on the "rating" column
+  Then the grid should display 2 groups of rows
+  

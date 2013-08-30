@@ -54,8 +54,8 @@ module Netzke::Basepack::DataAdapters
       end
 
       # apply sorting if needed
-      if params[:sorters] && sort_params = params[:sorters].first
-        dir = sort_params["direction"].downcase
+      for sort_params in (params[:sorters] || []) do
+        dir = (sort_params["direction"] || 'ASC').downcase
         column = columns.detect { |c| c[:name] == sort_params["property"] }
         relation = apply_sorting(relation, column, dir)
       end
